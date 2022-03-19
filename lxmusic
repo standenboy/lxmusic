@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#take song input
+query=$(printf '%s' "$*" | tr ' ' '+')
+
+#make dir
+mkdir ~/Music/
+mkdir ~/Music/lxmusic/
+
+list=$(curl -s "https:/vid.puffyan.us/search?q=$query" | grep -Eo "watch\?v=.{11}" | head -n 1)
+ 
+
+#download song to ~/Music/lxmusic
+youtube-dl -x --audio-format mp3 -o "~/Music/lxmusic/$query.%(ext)s" https://youtube.com/$(curl -s "https:/vid.puffyan.us/search?q=$query" | grep -Eo "watch\?v=.{11}" | head -n 1)
+
+#uploads to google drive
+gdrive upload ~/Music/lxmusic/$query.mp3
+
+
